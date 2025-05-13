@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book a Service</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h3 class="card-title mb-4">Select Services</h3>
+        <form id="bookingForm">
+          <div class="form-group">
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="matterport">
+              <label class="form-check-label" for="matterport">Matterport</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="floorplan">
+              <label class="form-check-label" for="floorplan">Floor Plan</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="photos">
+              <label class="form-check-label" for="photos">Photos</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="social">
+              <label class="form-check-label" for="social">Social Media Video</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="sqft">Square Footage</label>
+            <select id="sqft" class="form-control" required>
+              <option value="">-- Select Size --</option>
+              <option value="lt1500">Less than 1500</option>
+              <option value="1500-3000">1500 - 3000</option>
+              <option value="gt3000">Greater than 3000</option>
+            </select>
+          </div>
+
+          <div class="alert alert-warning d-none" id="socialNote">
+            To book a Social Media Video, please call Cory or Huy directly.
+          </div>
+
+          <button type="submit" id="nextBtn" class="btn btn-primary">Continue to Booking</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const matterport = document.getElementById('matterport');
+    const floorplan = document.getElementById('floorplan');
+    const photos = document.getElementById('photos');
+    const social = document.getElementById('social');
+    const nextBtn = document.getElementById('nextBtn');
+    const socialNote = document.getElementById('socialNote');
+
+    function updateState() {
+      const anyChecked = matterport.checked || floorplan.checked || photos.checked;
+
+      floorplan.disabled = !matterport.checked;
+      if (!matterport.checked) floorplan.checked = false;
+
+      if (social.checked) {
+        matterport.disabled = true;
+        floorplan.disabled = true;
+        photos.disabled = true;
+        nextBtn.disabled = true;
+        socialNote.classList.remove('d-none');
+      } else {
+        matterport.disabled = false;
+        photos.disabled = false;
+        nextBtn.disabled = false;
+        socialNote.classList.add('d-none');
+        if (matterport.checked) floorplan.disabled = false;
+      }
+
+      social.disabled = anyChecked;
+      if (anyChecked) social.checked = false;
+    }
+
+    matterport.addEventListener('change', updateState);
+    floorplan.addEventListener('change', updateState);
+    photos.addEventListener('change', updateState);
+    social.addEventListener('change', updateState);
+
+    document.getElementById('bookingForm').onsubmit = function(e) {
+      e.preventDefault();
+      const sqft = document.getElementById('sqft').value;
+      if (!sqft) {
+        alert("Please select square footage.");
+        return;
+      }
+
+      let key = '';
+      if (matterport.checked) key += 'matterport';
+      if (floorplan.checked) key += (key ? '+' : '') + 'floorplan';
+      if (photos.checked) key += (key ? '+' : '') + 'photos';
+      key += '_' + sqft;
+
+      const redirects = {
+        'photos_': 'https://booking13.timetap.com',
+
+        'matterport_lt1500': 'https://booking3.timetap.com',
+        'matterport_1500-3000': 'https://booking2.timetap.com',
+        'matterport_gt3000': 'https://booking1.timetap.com',
+
+        'matterport+photos_lt1500': 'https://booking12.timetap.com',
+        'matterport+photos_1500-3000': 'https://booking6.timetap.com',
+        'matterport+photos_gt3000': 'https://booking9.timetap.com',
+
+        'matterport+floorplan_lt1500': 'https://booking10.timetap.com',
+        'matterport+floorplan_1500-3000': 'https://booking4.timetap.com',
+        'matterport+floorplan_gt3000': 'https://booking7.timetap.com',
+
+        'matterport+floorplan+photos_lt1500': 'https://booking11.timetap.com',
+        'matterport+floorplan+photos_1500-3000': 'https://booking5.timetap.com',
+        'matterport+floorplan+photos_gt3000': 'https://booking8.timetap.com'
+      };
+
+      if (redirects[key]) {
+        window.parent.postMessage({ bookingRedirect: redirects[key] }, '*');
+      } else {
+        alert('No matching booking site found for selected services and size.');
+      }
+    };
+  </script>
+</body>
+</html>
