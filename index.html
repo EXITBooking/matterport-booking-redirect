@@ -301,13 +301,15 @@ document.getElementById("bookingForm").onsubmit = function(e) {
   let normKey = normalizeKey(key);
   let found = null;
   for (const line of activeServices) {
-    let matchPart = line.split("|---")[0]; // Up to before ---, ignore details
-    let normLineKey = normalizeKey(matchPart);
+    // Only consider everything before the first "|--" (double dash), since that's where the duration/price bits start
+    let lineKey = line.split("|--")[0];
+    let normLineKey = normalizeKey(lineKey);
     if (normLineKey === normKey) {
         found = line;
         break;
     }
 }
+
 
   if (!found) {
     alert("No matching service combination found. Please contact the office.");
