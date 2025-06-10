@@ -11,7 +11,7 @@
   <div class="container py-5">
     <div class="card shadow-sm">
       <div class="card-body">
-        <h3 class="card-title mb-4">Select Services4</h3>
+        <h3 class="card-title mb-4">Select Services5</h3>
         <form id="bookingForm">
           <div class="form-group">
             <div class="form-check">
@@ -310,12 +310,12 @@ document.getElementById("bookingForm").onsubmit = function(e) {
   // Matching logic
   let found = null;
   for (const line of activeServices) {
-    let lineKey = line.split("|--")[0];
-    if (lineKey === key) {
-      found = line;
-      break;
+    // Just check if the line starts with the key plus "|"
+    if (line.startsWith(key + "|") || line === key) {
+        found = line;
+        break;
     }
-  }
+}
   if (!found) {
     alert("No matching service combination found. Please contact the office.\n\nDEBUG KEY: " + key);
     return;
