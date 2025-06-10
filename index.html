@@ -248,7 +248,22 @@ function sqftToIdx(sqft) {
   if (sqft === "3001-3999") return 2;
   if (sqft === "gt3000") return 3;
   return 0;
-}
+};
+
+function normalizeKey(key) {
+  let serviceParts = key.split("|").filter(x =>
+    serviceOrder.some(service => x.startsWith(service + "-"))
+  );
+  let isVacant = key.includes("VACANT");
+  serviceParts.sort((a, b) => {
+    let ai = serviceOrder.findIndex(s => a.startsWith(s));
+    let bi = serviceOrder.findIndex(s => b.startsWith(s));
+    return ai - bi;
+  });
+  if (isVacant) serviceParts.push("VACANT");
+  return serviceParts.join("|");
+};
+
 document.getElementById("bookingForm").onsubmit = function(e) {
   e.preventDefault();
   const sqft = document.getElementById("sqft").value;
@@ -283,13 +298,17 @@ document.getElementById("bookingForm").onsubmit = function(e) {
   }
   let key = parts.join("|");
   if (vacant === "yes") key += "|VACANT";
+  let normKey = normalizeKey(key);
   let found = null;
   for (const line of activeServices) {
-    if (line.startsWith(key + "|") || line === key || line.startsWith(key + "|----")) {
-      found = line;
-      break;
+    let matchPart = line.split("|---")[0]; // Up to before ---, ignore details
+    let normLineKey = normalizeKey(matchPart);
+    if (normLineKey === normKey) {
+        found = line;
+        break;
     }
-  }
+}
+
   if (!found) {
     alert("No matching service combination found. Please contact the office.");
     return;
