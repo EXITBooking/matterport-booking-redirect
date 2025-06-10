@@ -28,7 +28,7 @@
             </div>
             <div class="form-check">
               <input type="checkbox" class="form-check-input" id="drone">
-              <label class="form-check-label" for="photos">Drone</label>
+              <label class="form-check-label" for="drone">Drone</label>
             </div>
             <div class="form-check">
               <input type="checkbox" class="form-check-input" id="social">
@@ -47,7 +47,6 @@
             </select>
           </div>
 
-          <!-- NEW: Vacant Property Dropdown -->
           <div class="form-group">
             <label for="vacant">Is the property Vacant?</label>
             <select id="vacant" class="form-control" required>
@@ -67,25 +66,182 @@
     </div>
   </div>
   <script>
-/* ======= Paste all lines from active_services.txt here ======= */
 const activeServices = [
 `Drone-15|--15|---P0.0|---D0|----[727483]`,
 `Drone-15|--15|---P0.0|---D0|VACANT|----[727490]`,
-/* ... paste ALL LINES from your active_services.txt here ... */
+`Drone-15|FloorPlan-0|Matterport-120|--135|---P25.0|---D25.0|----[727476]`,
+`Drone-15|FloorPlan-0|Matterport-120|--135|---P25.0|---D25.0|VACANT|----[727479]`,
+`Drone-15|FloorPlan-0|Matterport-120|Photos-45|--180|---P25.0|---D25.0|----[727488]`,
+`Drone-15|FloorPlan-0|Matterport-120|Photos-45|--180|---P25.0|---D25.0|VACANT|----[727487]`,
+`Drone-15|FloorPlan-0|Matterport-120|Photos-45|SocialVideo-30|--210|---P125.0|---D25.0|----[727485]`,
+`Drone-15|FloorPlan-0|Matterport-120|Photos-45|SocialVideo-30|--210|---P125.0|---D25.0|VACANT|----[727475]`,
+`Drone-15|FloorPlan-0|Matterport-120|SocialVideo-30|--165|---P125.0|---D25.0|----[727472]`,
+`Drone-15|FloorPlan-0|Matterport-120|SocialVideo-30|--165|---P125.0|---D25.0|VACANT|----[727489]`,
+`Drone-15|FloorPlan-0|Matterport-180|--195|---P25.0|---D25.0|----[727480]`,
+`Drone-15|FloorPlan-0|Matterport-180|--195|---P25.0|---D25.0|VACANT|----[727477]`,
+`Drone-15|FloorPlan-0|Matterport-180|Photos-60|--255|---P25.0|---D25.0|----[727486]`,
+`Drone-15|FloorPlan-0|Matterport-180|Photos-60|--255|---P25.0|---D25.0|VACANT|----[727482]`,
+`Drone-15|FloorPlan-0|Matterport-180|Photos-60|SocialVideo-30|--285|---P125.0|---D25.0|----[727481]`,
+`Drone-15|FloorPlan-0|Matterport-180|Photos-60|SocialVideo-30|--285|---P125.0|---D25.0|VACANT|----[727478]`,
+`Drone-15|FloorPlan-0|Matterport-180|SocialVideo-30|--225|---P125.0|---D25.0|----[727484]`,
+`Drone-15|FloorPlan-0|Matterport-180|SocialVideo-30|--225|---P125.0|---D25.0|VACANT|----[727473]`,
+`Drone-15|FloorPlan-0|Matterport-60|--75|---P25.0|---D25.0|----[727471]`,
+`Drone-15|FloorPlan-0|Matterport-60|--75|---P25.0|---D25.0|VACANT|----[727474]`,
+`Drone-15|FloorPlan-0|Matterport-60|Photos-15|--90|---P25.0|---D25.0|----[727492]`,
+`Drone-15|FloorPlan-0|Matterport-60|Photos-15|--90|---P25.0|---D25.0|VACANT|----[727491]`,
+`Drone-15|FloorPlan-0|Matterport-60|Photos-15|SocialVideo-30|--120|---P125.0|---D25.0|----[727494]`,
+`Drone-15|FloorPlan-0|Matterport-60|Photos-15|SocialVideo-30|--120|---P125.0|---D25.0|VACANT|----[727493]`,
+`Drone-15|FloorPlan-0|Matterport-60|SocialVideo-30|--105|---P125.0|---D25.0|----[727495]`,
+`Drone-15|FloorPlan-0|Matterport-60|SocialVideo-30|--105|---P125.0|---D25.0|VACANT|----[727497]`,
+`Drone-15|FloorPlan-0|Matterport-90|--105|---P25.0|---D25.0|----[727496]`,
+`Drone-15|FloorPlan-0|Matterport-90|--105|---P25.0|---D25.0|VACANT|----[727498]`,
+`Drone-15|FloorPlan-0|Matterport-90|Photos-30|--135|---P25.0|---D25.0|----[727499]`,
+`Drone-15|FloorPlan-0|Matterport-90|Photos-30|--135|---P25.0|---D25.0|VACANT|----[727505]`,
+`Drone-15|FloorPlan-0|Matterport-90|Photos-30|SocialVideo-30|--165|---P125.0|---D25.0|----[727500]`,
+`Drone-15|FloorPlan-0|Matterport-90|Photos-30|SocialVideo-30|--165|---P125.0|---D25.0|VACANT|----[727502]`,
+`Drone-15|FloorPlan-0|Matterport-90|SocialVideo-30|--135|---P125.0|---D25.0|----[727504]`,
+`Drone-15|FloorPlan-0|Matterport-90|SocialVideo-30|--135|---P125.0|---D25.0|VACANT|----[727501]`,
+`Drone-15|Matterport-120|--135|---P0.0|---D0|----[727503]`,
+`Drone-15|Matterport-120|--135|---P0.0|---D0|VACANT|----[727506]`,
+`Drone-15|Matterport-120|Photos-45|--180|---P0.0|---D0|----[727509]`,
+`Drone-15|Matterport-120|Photos-45|--180|---P0.0|---D0|VACANT|----[727507]`,
+`Drone-15|Matterport-120|Photos-45|SocialVideo-30|--210|---P100.0|---D0|----[727508]`,
+`Drone-15|Matterport-120|Photos-45|SocialVideo-30|--210|---P100.0|---D0|VACANT|----[727510]`,
+`Drone-15|Matterport-120|SocialVideo-30|--165|---P100.0|---D0|----[727511]`,
+`Drone-15|Matterport-120|SocialVideo-30|--165|---P100.0|---D0|VACANT|----[727512]`,
+`Drone-15|Matterport-180|--195|---P0.0|---D0|----[727514]`,
+`Drone-15|Matterport-180|--195|---P0.0|---D0|VACANT|----[727513]`,
+`Drone-15|Matterport-180|Photos-60|--255|---P0.0|---D0|----[727516]`,
+`Drone-15|Matterport-180|Photos-60|--255|---P0.0|---D0|VACANT|----[727515]`,
+`Drone-15|Matterport-180|Photos-60|SocialVideo-30|--285|---P100.0|---D0|----[727517]`,
+`Drone-15|Matterport-180|Photos-60|SocialVideo-30|--285|---P100.0|---D0|VACANT|----[727518]`,
+`Drone-15|Matterport-180|SocialVideo-30|--225|---P100.0|---D0|----[727519]`,
+`Drone-15|Matterport-180|SocialVideo-30|--225|---P100.0|---D0|VACANT|----[727520]`,
+`Drone-15|Matterport-60|--75|---P0.0|---D0|----[727522]`,
+`Drone-15|Matterport-60|--75|---P0.0|---D0|VACANT|----[727521]`,
+`Drone-15|Matterport-60|Photos-15|--90|---P0.0|---D0|----[727523]`,
+`Drone-15|Matterport-60|Photos-15|--90|---P0.0|---D0|VACANT|----[727524]`,
+`Drone-15|Matterport-60|Photos-15|SocialVideo-30|--120|---P100.0|---D0|----[727526]`,
+`Drone-15|Matterport-60|Photos-15|SocialVideo-30|--120|---P100.0|---D0|VACANT|----[727525]`,
+`Drone-15|Matterport-60|SocialVideo-30|--105|---P100.0|---D0|----[727527]`,
+`Drone-15|Matterport-60|SocialVideo-30|--105|---P100.0|---D0|VACANT|----[727528]`,
+`Drone-15|Matterport-90|--105|---P0.0|---D0|----[727529]`,
+`Drone-15|Matterport-90|--105|---P0.0|---D0|VACANT|----[727530]`,
+`Drone-15|Matterport-90|Photos-30|--135|---P0.0|---D0|----[727531]`,
+`Drone-15|Matterport-90|Photos-30|--135|---P0.0|---D0|VACANT|----[727532]`,
+`Drone-15|Matterport-90|Photos-30|SocialVideo-30|--165|---P100.0|---D0|----[727534]`,
+`Drone-15|Matterport-90|Photos-30|SocialVideo-30|--165|---P100.0|---D0|VACANT|----[727533]`,
+`Drone-15|Matterport-90|SocialVideo-30|--135|---P100.0|---D0|----[727535]`,
+`Drone-15|Matterport-90|SocialVideo-30|--135|---P100.0|---D0|VACANT|----[727536]`,
+`Drone-15|Photos-15|--30|---P0.0|---D0|----[727537]`,
+`Drone-15|Photos-15|--30|---P0.0|---D0|VACANT|----[727539]`,
+`Drone-15|Photos-15|SocialVideo-30|--60|---P100.0|---D0|----[727541]`,
+`Drone-15|Photos-15|SocialVideo-30|--60|---P100.0|---D0|VACANT|----[727543]`,
+`Drone-15|Photos-30|--45|---P0.0|---D0|----[727540]`,
+`Drone-15|Photos-30|--45|---P0.0|---D0|VACANT|----[727538]`,
+`Drone-15|Photos-30|SocialVideo-30|--75|---P100.0|---D0|----[727545]`,
+`Drone-15|Photos-30|SocialVideo-30|--75|---P100.0|---D0|VACANT|----[727544]`,
+`Drone-15|Photos-45|--60|---P0.0|---D0|----[727542]`,
+`Drone-15|Photos-45|--60|---P0.0|---D0|VACANT|----[727548]`,
+`Drone-15|Photos-45|SocialVideo-30|--90|---P100.0|---D0|----[727547]`,
+`Drone-15|Photos-45|SocialVideo-30|--90|---P100.0|---D0|VACANT|----[727546]`,
+`Drone-15|Photos-60|--75|---P0.0|---D0|----[727549]`,
+`Drone-15|Photos-60|--75|---P0.0|---D0|VACANT|----[727550]`,
+`Drone-15|Photos-60|SocialVideo-30|--105|---P100.0|---D0|----[727551]`,
+`Drone-15|Photos-60|SocialVideo-30|--105|---P100.0|---D0|VACANT|----[727552]`,
+`Drone-15|SocialVideo-30|--45|---P100.0|---D0|----[727554]`,
+`Drone-15|SocialVideo-30|--45|---P100.0|---D0|VACANT|----[727553]`,
+`FloorPlan-0|Matterport-120|--120|---P25.0|---D25.0|----[727555]`,
+`FloorPlan-0|Matterport-120|--120|---P25.0|---D25.0|VACANT|----[727556]`,
+`FloorPlan-0|Matterport-120|Photos-45|--165|---P25.0|---D25.0|----[727558]`,
+`FloorPlan-0|Matterport-120|Photos-45|--165|---P25.0|---D25.0|VACANT|----[727557]`,
+`FloorPlan-0|Matterport-120|Photos-45|SocialVideo-30|--195|---P125.0|---D25.0|----[727559]`,
+`FloorPlan-0|Matterport-120|Photos-45|SocialVideo-30|--195|---P125.0|---D25.0|VACANT|----[727560]`,
+`FloorPlan-0|Matterport-120|SocialVideo-30|--150|---P125.0|---D25.0|----[727561]`,
+`FloorPlan-0|Matterport-120|SocialVideo-30|--150|---P125.0|---D25.0|VACANT|----[727562]`,
+`FloorPlan-0|Matterport-180|--180|---P25.0|---D25.0|----[727563]`,
+`FloorPlan-0|Matterport-180|--180|---P25.0|---D25.0|VACANT|----[727564]`,
+`FloorPlan-0|Matterport-180|Photos-60|--240|---P25.0|---D25.0|----[727566]`,
+`FloorPlan-0|Matterport-180|Photos-60|--240|---P25.0|---D25.0|VACANT|----[727567]`,
+`FloorPlan-0|Matterport-180|Photos-60|SocialVideo-30|--270|---P125.0|---D25.0|----[727565]`,
+`FloorPlan-0|Matterport-180|Photos-60|SocialVideo-30|--270|---P125.0|---D25.0|VACANT|----[727568]`,
+`FloorPlan-0|Matterport-180|SocialVideo-30|--210|---P125.0|---D25.0|----[727569]`,
+`FloorPlan-0|Matterport-180|SocialVideo-30|--210|---P125.0|---D25.0|VACANT|----[727570]`,
+`FloorPlan-0|Matterport-60|--60|---P25.0|---D25.0|----[727571]`,
+`FloorPlan-0|Matterport-60|--60|---P25.0|---D25.0|VACANT|----[727572]`,
+`FloorPlan-0|Matterport-60|Photos-15|--75|---P25.0|---D25.0|----[727573]`,
+`FloorPlan-0|Matterport-60|Photos-15|--75|---P25.0|---D25.0|VACANT|----[727575]`,
+`FloorPlan-0|Matterport-60|Photos-15|SocialVideo-30|--105|---P125.0|---D25.0|----[727574]`,
+`FloorPlan-0|Matterport-60|Photos-15|SocialVideo-30|--105|---P125.0|---D25.0|VACANT|----[727579]`,
+`FloorPlan-0|Matterport-60|SocialVideo-30|--90|---P125.0|---D25.0|----[727576]`,
+`FloorPlan-0|Matterport-60|SocialVideo-30|--90|---P125.0|---D25.0|VACANT|----[727577]`,
+`FloorPlan-0|Matterport-90|--90|---P25.0|---D25.0|----[727578]`,
+`FloorPlan-0|Matterport-90|--90|---P25.0|---D25.0|VACANT|----[727580]`,
+`FloorPlan-0|Matterport-90|Photos-30|--120|---P25.0|---D25.0|----[727583]`,
+`FloorPlan-0|Matterport-90|Photos-30|--120|---P25.0|---D25.0|VACANT|----[727582]`,
+`FloorPlan-0|Matterport-90|Photos-30|SocialVideo-30|--150|---P125.0|---D25.0|----[727585]`,
+`FloorPlan-0|Matterport-90|Photos-30|SocialVideo-30|--150|---P125.0|---D25.0|VACANT|----[727581]`,
+`FloorPlan-0|Matterport-90|SocialVideo-30|--120|---P125.0|---D25.0|----[727584]`,
+`FloorPlan-0|Matterport-90|SocialVideo-30|--120|---P125.0|---D25.0|VACANT|----[727586]`,
+`Matterport-120|--120|---P0.0|---D0|----[727588]`,
+`Matterport-120|--120|---P0.0|---D0|VACANT|----[727587]`,
+`Matterport-120|Photos-45|--165|---P0.0|---D0|----[727589]`,
+`Matterport-120|Photos-45|--165|---P0.0|---D0|VACANT|----[727590]`,
+`Matterport-120|Photos-45|SocialVideo-30|--195|---P100.0|---D0|----[727591]`,
+`Matterport-120|Photos-45|SocialVideo-30|--195|---P100.0|---D0|VACANT|----[727596]`,
+`Matterport-120|SocialVideo-30|--150|---P100.0|---D0|----[727593]`,
+`Matterport-120|SocialVideo-30|--150|---P100.0|---D0|VACANT|----[727592]`,
+`Matterport-180|--180|---P0.0|---D0|----[727594]`,
+`Matterport-180|--180|---P0.0|---D0|VACANT|----[727595]`,
+`Matterport-180|Photos-60|--240|---P0.0|---D0|----[727598]`,
+`Matterport-180|Photos-60|--240|---P0.0|---D0|VACANT|----[727597]`,
+`Matterport-180|Photos-60|SocialVideo-30|--270|---P100.0|---D0|----[727599]`,
+`Matterport-180|Photos-60|SocialVideo-30|--270|---P100.0|---D0|VACANT|----[727600]`,
+`Matterport-180|SocialVideo-30|--210|---P100.0|---D0|----[727601]`,
+`Matterport-180|SocialVideo-30|--210|---P100.0|---D0|VACANT|----[727603]`,
+`Matterport-60|--60|---P0.0|---D0|----[727602]`,
+`Matterport-60|--60|---P0.0|---D0|VACANT|----[727604]`,
+`Matterport-60|Photos-15|--75|---P0.0|---D0|----[727605]`,
+`Matterport-60|Photos-15|--75|---P0.0|---D0|VACANT|----[727608]`,
+`Matterport-60|Photos-15|SocialVideo-30|--105|---P100.0|---D0|----[727606]`,
+`Matterport-60|Photos-15|SocialVideo-30|--105|---P100.0|---D0|VACANT|----[727607]`,
+`Matterport-60|SocialVideo-30|--90|---P100.0|---D0|----[727609]`,
+`Matterport-60|SocialVideo-30|--90|---P100.0|---D0|VACANT|----[727610]`,
+`Matterport-90|--90|---P0.0|---D0|----[727611]`,
+`Matterport-90|--90|---P0.0|---D0|VACANT|----[727612]`,
+`Matterport-90|Photos-30|--120|---P0.0|---D0|----[727613]`,
+`Matterport-90|Photos-30|--120|---P0.0|---D0|VACANT|----[727616]`,
+`Matterport-90|Photos-30|SocialVideo-30|--150|---P100.0|---D0|----[727614]`,
+`Matterport-90|Photos-30|SocialVideo-30|--150|---P100.0|---D0|VACANT|----[727618]`,
+`Matterport-90|SocialVideo-30|--120|---P100.0|---D0|----[727615]`,
+`Matterport-90|SocialVideo-30|--120|---P100.0|---D0|VACANT|----[727617]`,
+`Photos-15|--15|---P0.0|---D0|----[727620]`,
+`Photos-15|--15|---P0.0|---D0|VACANT|----[727621]`,
+`Photos-15|SocialVideo-30|--45|---P100.0|---D0|----[727622]`,
+`Photos-15|SocialVideo-30|--45|---P100.0|---D0|VACANT|----[727619]`,
+`Photos-30|--30|---P0.0|---D0|----[727625]`,
+`Photos-30|--30|---P0.0|---D0|VACANT|----[727623]`,
+`Photos-30|SocialVideo-30|--60|---P100.0|---D0|----[727624]`,
+`Photos-30|SocialVideo-30|--60|---P100.0|---D0|VACANT|----[727627]`,
+`Photos-45|--45|---P0.0|---D0|----[727626]`,
+`Photos-45|--45|---P0.0|---D0|VACANT|----[727628]`,
+`Photos-45|SocialVideo-30|--75|---P100.0|---D0|----[727629]`,
+`Photos-45|SocialVideo-30|--75|---P100.0|---D0|VACANT|----[727630]`,
+`Photos-60|--60|---P0.0|---D0|----[727631]`,
+`Photos-60|--60|---P0.0|---D0|VACANT|----[727633]`,
+`Photos-60|SocialVideo-30|--90|---P100.0|---D0|----[727632]`,
+`Photos-60|SocialVideo-30|--90|---P100.0|---D0|VACANT|----[727634]`,
+`SocialVideo-30|--30|---P100.0|---D0|----[727636]`,
+`SocialVideo-30|--30|---P100.0|---D0|VACANT|----[727635]`
 ];
-
-/* Service duration mapping from your table */
 const durations = {
   "Matterport": [60, 90, 120, 180],
-  "FloorPlan": [0, 0, 0, 0], // always 0
+  "FloorPlan": [0, 0, 0, 0],
   "Photos": [15, 30, 45, 60],
-  "Drone": [15, 15, 15, 15], // always 15
-  "SocialVideo": [30, 30, 30, 30], // always 30
+  "Drone": [15, 15, 15, 15],
+  "SocialVideo": [30, 30, 30, 30]
 };
-
 const serviceOrder = ["Drone", "FloorPlan", "Matterport", "Photos", "SocialVideo"];
-
-// Map your select value to index
 function sqftToIdx(sqft) {
   if (sqft === "lt1500") return 0;
   if (sqft === "1501-3000") return 1;
@@ -93,12 +249,10 @@ function sqftToIdx(sqft) {
   if (sqft === "gt3000") return 3;
   return 0;
 }
-
 document.getElementById("bookingForm").onsubmit = function(e) {
   e.preventDefault();
   const sqft = document.getElementById("sqft").value;
   const vacant = document.getElementById("vacant").value;
-
   if (!sqft) {
     alert("Please select square footage.");
     return;
@@ -107,24 +261,17 @@ document.getElementById("bookingForm").onsubmit = function(e) {
     alert("Please indicate if the property is vacant.");
     return;
   }
-
-  // Build chosen services, preserving order
   const selections = {
     "Drone": document.getElementById("drone").checked,
     "FloorPlan": document.getElementById("floorplan").checked,
     "Matterport": document.getElementById("matterport").checked,
     "Photos": document.getElementById("photos").checked,
-    "SocialVideo": document.getElementById("social").checked,
+    "SocialVideo": document.getElementById("social").checked
   };
-
-  // Square footage index
   const idx = sqftToIdx(sqft);
-
-  // Build key
   let parts = [];
   for (const service of serviceOrder) {
     if (selections[service]) {
-      // Use highest available duration if index is out of range
       const durArr = durations[service];
       let duration = durArr[Math.min(idx, durArr.length-1)];
       parts.push(service + "-" + duration);
@@ -134,37 +281,27 @@ document.getElementById("bookingForm").onsubmit = function(e) {
     alert("Please select at least one service.");
     return;
   }
-
-  // Compose key
   let key = parts.join("|");
   if (vacant === "yes") key += "|VACANT";
-
-  // Find matching line
   let found = null;
   for (const line of activeServices) {
-    if (line.startsWith(key + "|") || line === key || line.startsWith(key + "|----") ) {
+    if (line.startsWith(key + "|") || line === key || line.startsWith(key + "|----")) {
       found = line;
       break;
     }
   }
-
   if (!found) {
     alert("No matching service combination found. Please contact the office.");
     return;
   }
-
-  // Extract service id
   const match = found.match(/\[(\d+)\]/);
   if (!match) {
     alert("No service ID found for this selection.");
     return;
   }
   const serviceId = match[1];
-
-  // Redirect
   window.location.href = `https://booking99.timetap.com/?rid=${serviceId}#/`;
 };
 </script>
-
 </body>
 </html>
