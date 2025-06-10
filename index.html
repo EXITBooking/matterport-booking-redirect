@@ -11,7 +11,7 @@
   <div class="container py-5">
     <div class="card shadow-sm">
       <div class="card-body">
-        <h3 class="card-title mb-4">Select Services3</h3>
+        <h3 class="card-title mb-4">Select Services4</h3>
         <form id="bookingForm">
           <div class="form-group">
             <div class="form-check">
@@ -250,6 +250,15 @@ function sqftToIdx(sqft) {
   return 0;
 };
 
+const idToServiceName = {
+  "drone": "Drone",
+  "floorplan": "FloorPlan",
+  "matterport": "Matterport",
+  "photos": "Photos",
+  "social": "SocialVideo"
+};
+
+
 function normalizeKey(key) {
   let serviceParts = key.split("|").filter(x =>
     serviceOrder.some(service => x.startsWith(service + "-"))
@@ -276,43 +285,39 @@ document.getElementById("bookingForm").onsubmit = function(e) {
     alert("Please indicate if the property is vacant.");
     return;
   }
-  const selections = {
-    "Drone": document.getElementById("drone").checked,
-    "FloorPlan": document.getElementById("floorplan").checked,
-    "Matterport": document.getElementById("matterport").checked,
-    "Photos": document.getElementById("photos").checked,
-    "SocialVideo": document.getElementById("social").checked
-  };
   const idx = sqftToIdx(sqft);
   let parts = [];
-  for (const service of serviceOrder) {
-    if (selections[service]) {
-      const durArr = durations[service];
+  for (const id in idToServiceName) {
+    if (document.getElementById(id).checked) {
+      const svc = idToServiceName[id];
+      const durArr = durations[svc];
       let duration = durArr[Math.min(idx, durArr.length-1)];
-      parts.push(service + "-" + duration);
+      parts.push(svc + "-" + duration);
     }
   }
+  // Sort by serviceOrder to ensure consistent key (order matters for matching)
+  parts.sort((a, b) => {
+    let ai = serviceOrder.indexOf(a.split("-")[0]);
+    let bi = serviceOrder.indexOf(b.split("-")[0]);
+    return ai - bi;
+  });
   if (parts.length === 0) {
     alert("Please select at least one service.");
     return;
   }
   let key = parts.join("|");
   if (vacant === "yes") key += "|VACANT";
-  let normKey = normalizeKey(key);
+  // Matching logic
   let found = null;
   for (const line of activeServices) {
-    // Only consider everything before the first "|--" (double dash), since that's where the duration/price bits start
     let lineKey = line.split("|--")[0];
-    let normLineKey = normalizeKey(lineKey);
-    if (normLineKey === normKey) {
-        found = line;
-        break;
+    if (lineKey === key) {
+      found = line;
+      break;
     }
-}
-
-
+  }
   if (!found) {
-    alert("No matching service combination found. Please contact the office.");
+    alert("No matching service combination found. Please contact the office.\n\nDEBUG KEY: " + key);
     return;
   }
   const match = found.match(/\[(\d+)\]/);
@@ -323,6 +328,8 @@ document.getElementById("bookingForm").onsubmit = function(e) {
   const serviceId = match[1];
   window.location.href = `https://booking99.timetap.com/?rid=${serviceId}#/`;
 };
+
+
 </script>
 </body>
 </html>
