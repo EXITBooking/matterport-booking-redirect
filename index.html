@@ -42,6 +42,16 @@
             </select>
           </div>
 
+          <!-- NEW: Vacant Property Dropdown -->
+          <div class="form-group">
+            <label for="vacant">Is the property Vacant?</label>
+            <select id="vacant" class="form-control" required>
+              <option value="">-- Choose One --</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+
           <div class="alert alert-warning d-none" id="socialNote">
             To book a Social Media Video, please call Cory or Huy directly.
           </div>
@@ -92,10 +102,17 @@
     document.getElementById('bookingForm').onsubmit = function(e) {
       e.preventDefault();
       const sqft = document.getElementById('sqft').value;
+      const vacant = document.getElementById('vacant').value;
       if (!sqft) {
         alert("Please select square footage.");
         return;
       }
+      if (!vacant) {
+        alert("Please indicate if the property is vacant.");
+        return;
+      }
+
+      // -- The rest of your logic for building key and redirects here --
 
       let key = '';
       if (matterport.checked) key += 'matterport';
@@ -103,21 +120,22 @@
       if (photos.checked) key += (key ? '+' : '') + 'photos';
       key += '_' + sqft;
 
+      // For now, just log vacant value for test
+      // In next steps, you’ll probably want to change redirect logic to use it
+      console.log("Vacant property?", vacant);
+
       const redirects = {
         'photos_': 'https://booking13.timetap.com',
-
+        // ... rest of your redirect mappings ...
         'matterport_lt1500': 'https://booking3.timetap.com',
         'matterport_1500-3000': 'https://booking2.timetap.com',
         'matterport_gt3000': 'https://booking1.timetap.com',
-
         'matterport+photos_lt1500': 'https://booking12.timetap.com',
         'matterport+photos_1500-3000': 'https://booking6.timetap.com',
         'matterport+photos_gt3000': 'https://booking9.timetap.com',
-
         'matterport+floorplan_lt1500': 'https://booking10.timetap.com',
         'matterport+floorplan_1500-3000': 'https://booking4.timetap.com',
         'matterport+floorplan_gt3000': 'https://booking7.timetap.com',
-
         'matterport+floorplan+photos_lt1500': 'https://booking11.timetap.com',
         'matterport+floorplan+photos_1500-3000': 'https://booking5.timetap.com',
         'matterport+floorplan+photos_gt3000': 'https://booking8.timetap.com'
