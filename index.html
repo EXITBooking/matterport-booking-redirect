@@ -11,7 +11,7 @@
   <div class="container py-5">
     <div class="card shadow-sm">
       <div class="card-body">
-        <h3 class="card-title mb-4">Select Services5</h3>
+        <h3 class="card-title mb-4">Select Services6</h3>
         <form id="bookingForm">
           <div class="form-group">
             <div class="form-check">
@@ -308,14 +308,27 @@ document.getElementById("bookingForm").onsubmit = function(e) {
   let key = parts.join("|");
   if (vacant === "yes") key += "|VACANT";
   // Matching logic
-  let found = null;
-  for (const line of activeServices) {
-    // Just check if the line starts with the key plus "|"
-    if (line.startsWith(key + "|") || line === key) {
+  function getServiceKeyOnly(str) {
+    return str.split("|")
+        .filter(x => serviceOrder.some(s => x.startsWith(s + "-")) || x === "VACANT")
+        .sort((a, b) => {
+            let ai = serviceOrder.indexOf(a.split("-")[0]);
+            let bi = serviceOrder.indexOf(b.split("-")[0]);
+            return ai - bi;
+        })
+        .join("|");
+}
+
+let found = null;
+let keyNormalized = getServiceKeyOnly(key);
+for (const line of activeServices) {
+    let lineKey = getServiceKeyOnly(line);
+    if (lineKey === keyNormalized) {
         found = line;
         break;
     }
 }
+
   if (!found) {
     alert("No matching service combination found. Please contact the office.\n\nDEBUG KEY: " + key);
     return;
