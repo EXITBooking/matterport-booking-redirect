@@ -66,8 +66,105 @@
       </div>
     </div>
   </div>
+  <script>
+/* ======= Paste all lines from active_services.txt here ======= */
+const activeServices = [
+`Drone-15|--15|---P0.0|---D0|----[727483]`,
+`Drone-15|--15|---P0.0|---D0|VACANT|----[727490]`,
+/* ... paste ALL LINES from your active_services.txt here ... */
+];
 
+/* Service duration mapping from your table */
+const durations = {
+  "Matterport": [60, 90, 120, 180],
+  "FloorPlan": [0, 0, 0, 0], // always 0
+  "Photos": [15, 30, 45, 60],
+  "Drone": [15, 15, 15, 15], // always 15
+  "SocialVideo": [30, 30, 30, 30], // always 30
+};
 
-  </script>
+const serviceOrder = ["Drone", "FloorPlan", "Matterport", "Photos", "SocialVideo"];
+
+// Map your select value to index
+function sqftToIdx(sqft) {
+  if (sqft === "lt1500") return 0;
+  if (sqft === "1501-3000") return 1;
+  if (sqft === "3001-3999") return 2;
+  if (sqft === "gt3000") return 3;
+  return 0;
+}
+
+document.getElementById("bookingForm").onsubmit = function(e) {
+  e.preventDefault();
+  const sqft = document.getElementById("sqft").value;
+  const vacant = document.getElementById("vacant").value;
+
+  if (!sqft) {
+    alert("Please select square footage.");
+    return;
+  }
+  if (!vacant) {
+    alert("Please indicate if the property is vacant.");
+    return;
+  }
+
+  // Build chosen services, preserving order
+  const selections = {
+    "Drone": document.getElementById("drone").checked,
+    "FloorPlan": document.getElementById("floorplan").checked,
+    "Matterport": document.getElementById("matterport").checked,
+    "Photos": document.getElementById("photos").checked,
+    "SocialVideo": document.getElementById("social").checked,
+  };
+
+  // Square footage index
+  const idx = sqftToIdx(sqft);
+
+  // Build key
+  let parts = [];
+  for (const service of serviceOrder) {
+    if (selections[service]) {
+      // Use highest available duration if index is out of range
+      const durArr = durations[service];
+      let duration = durArr[Math.min(idx, durArr.length-1)];
+      parts.push(service + "-" + duration);
+    }
+  }
+  if (parts.length === 0) {
+    alert("Please select at least one service.");
+    return;
+  }
+
+  // Compose key
+  let key = parts.join("|");
+  if (vacant === "yes") key += "|VACANT";
+
+  // Find matching line
+  let found = null;
+  for (const line of activeServices) {
+    if (line.startsWith(key + "|") || line === key || line.startsWith(key + "|----") ) {
+      found = line;
+      break;
+    }
+  }
+
+  if (!found) {
+    alert("No matching service combination found. Please contact the office.");
+    return;
+  }
+
+  // Extract service id
+  const match = found.match(/\[(\d+)\]/);
+  if (!match) {
+    alert("No service ID found for this selection.");
+    return;
+  }
+  const serviceId = match[1];
+
+  // Redirect
+  window.location.href = `https://booking99.timetap.com/?rid=${serviceId}#/`;
+};
+</script>
+
 </body>
 </html>
