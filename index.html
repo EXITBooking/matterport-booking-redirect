@@ -351,11 +351,7 @@ for (const line of activeServices) {
     return;
   }
   const serviceId = match[1];
-
-  // cache-buster + don't keep the current page in history
-  const ts = Date.now();
-  location.replace(`https://booking99.timetap.com/?rid=${serviceId}&_ts=${ts}#/`);
-
+  window.location.href = `https://booking99.timetap.com/?rid=${serviceId}#/`;
 };
 
 
