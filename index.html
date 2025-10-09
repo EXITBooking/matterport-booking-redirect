@@ -65,9 +65,8 @@
       </div>
     </div>
   </div>
-
   <script>
-    const activeServices = [
+const activeServices = [
 `Drone-15|--15|---P0.0|---D0|----[733431]`,
 `Drone-15|--15|---P0.0|---D0|VACANT|----[733424]`,
 `Drone-15|FloorPlan-0|Matterport-105|--120|---P25.0|---D25.0|----[733427]`,
@@ -247,133 +246,123 @@
 `SocialMediaVideo-60|--60|---P50.0|---D50.0|----[733595]`,
 `SocialMediaVideo-60|--60|---P50.0|---D50.0|VACANT|----[733596]`
 ];
+const durations = {
+  "Matterport": [50, 75, 105, 120],
+  "FloorPlan": [0, 0, 0, 0],
+  "Photos": [15, 30, 45, 60],
+  "Drone": [15, 15, 15, 15],
+  "SocialVideo": [30, 40, 50, 60]
+};
+const serviceOrder = ["Drone", "FloorPlan", "Matterport", "Photos", "SocialVideo"];
+function sqftToIdx(sqft) {
+  if (sqft === "lt1500") return 0;
+  if (sqft === "1501-3000") return 1;
+  if (sqft === "3001-3999") return 2;
+  if (sqft === "gt3000") return 3;
+  return 0;
+};
 
-    const durations = {
-      "Matterport": [50, 75, 105, 120],
-      "FloorPlan": [0, 0, 0, 0],
-      "Photos": [15, 30, 45, 60],
-      "Drone": [15, 15, 15, 15],
-      "SocialVideo": [30, 40, 50, 60]
-    };
+const idToServiceName = {
+  "drone": "Drone",
+  "floorplan": "FloorPlan",
+  "matterport": "Matterport",
+  "photos": "Photos",
+  "social": "SocialVideo"
+};
 
-    const serviceOrder = ["Drone", "FloorPlan", "Matterport", "Photos", "SocialVideo"];
 
-    function sqftToIdx(sqft) {
-      if (sqft === "lt1500") return 0;
-      if (sqft === "1501-3000") return 1;
-      if (sqft === "3001-3999") return 2;
-      if (sqft === "gt3000") return 3;
-      return 0;
+function normalizeKey(key) {
+  let serviceParts = key.split("|").filter(x =>
+    serviceOrder.some(service => x.startsWith(service + "-"))
+  );
+  let isVacant = key.includes("VACANT");
+  serviceParts.sort((a, b) => {
+    let ai = serviceOrder.findIndex(s => a.startsWith(s));
+    let bi = serviceOrder.findIndex(s => b.startsWith(s));
+    return ai - bi;
+  });
+  if (isVacant) serviceParts.push("VACANT");
+  return serviceParts.join("|");
+};
+
+document.getElementById("bookingForm").onsubmit = function(e) {
+  e.preventDefault();
+  const sqft = document.getElementById("sqft").value;
+  const vacant = document.getElementById("vacant").value;
+  if (!sqft) {
+    alert("Please select square footage.");
+    return;
+  }
+  if (!vacant) {
+    alert("Please indicate if the property is vacant.");
+    return;
+  }
+  const idx = sqftToIdx(sqft);
+  let parts = [];
+  for (const id in idToServiceName) {
+    if (document.getElementById(id).checked) {
+      const svc = idToServiceName[id];
+      const durArr = durations[svc];
+      let duration = durArr[Math.min(idx, durArr.length-1)];
+      parts.push(svc + "-" + duration);
     }
-
-    const idToServiceName = {
-      "drone": "Drone",
-      "floorplan": "FloorPlan",
-      "matterport": "Matterport",
-      "photos": "Photos",
-      "social": "SocialVideo"
-    };
-
-    function normalizeKey(key) {
-      let serviceParts = key.split("|").filter(x =>
-        serviceOrder.some(service => x.startsWith(service + "-"))
-      );
-      let isVacant = key.includes("VACANT");
-      serviceParts.sort((a, b) => {
-        let ai = serviceOrder.findIndex(s => a.startsWith(s));
-        let bi = serviceOrder.findIndex(s => b.startsWith(s));
-        return ai - bi;
-      });
-      if (isVacant) serviceParts.push("VACANT");
-      return serviceParts.join("|");
-    }
-
-    function getServiceKeyOnly(str) {
-      return str.split("|")
+  }
+  // Sort by serviceOrder to ensure consistent key (order matters for matching)
+  parts.sort((a, b) => {
+    let ai = serviceOrder.indexOf(a.split("-")[0]);
+    let bi = serviceOrder.indexOf(b.split("-")[0]);
+    return ai - bi;
+  });
+  if (parts.length === 0) {
+    alert("Please select at least one service.");
+    return;
+  }
+  let key = parts.join("|");
+  if (vacant === "yes") key += "|VACANT";
+  // Matching logic
+  function getServiceKeyOnly(str) {
+    return str.split("|")
         .filter(x => serviceOrder.some(s => x.startsWith(s + "-")) || x === "VACANT")
         .sort((a, b) => {
-          let ai = serviceOrder.indexOf(a.split("-")[0]);
-          let bi = serviceOrder.indexOf(b.split("-")[0]);
-          return ai - bi;
+            let ai = serviceOrder.indexOf(a.split("-")[0]);
+            let bi = serviceOrder.indexOf(b.split("-")[0]);
+            return ai - bi;
         })
         .join("|");
+}
+
+let found = null;
+let keyNormalized = getServiceKeyOnly(key);
+for (const line of activeServices) {
+    let lineKey = getServiceKeyOnly(line);
+    if (lineKey === keyNormalized) {
+        found = line;
+        break;
     }
+}
 
-    document.getElementById("bookingForm").onsubmit = function(e) {
-      e.preventDefault();
+  if (!found) {
+    alert("No matching service combination found. Please contact the office.\n\nDEBUG KEY: " + key);
+    return;
+  }
+  const match = found.match(/\[(\d+)\]/);
+  if (!match) {
+    alert("No service ID found for this selection.");
+    return;
+  }
+  const serviceId = match[1];
+  window.location.href = `https://booking99.timetap.com/?rid=${serviceId}#/`;
 
-      const sqft = document.getElementById("sqft").value;
-      const vacant = document.getElementById("vacant").value;
+};
 
-      if (!sqft) {
-        alert("Please select square footage.");
-        return;
-      }
-      if (!vacant) {
-        alert("Please indicate if the property is vacant.");
-        return;
-      }
 
-      const idx = sqftToIdx(sqft);
-      let parts = [];
-
-      for (const id in idToServiceName) {
-        if (document.getElementById(id).checked) {
-          const svc = idToServiceName[id];
-          const durArr = durations[svc];
-          let duration = durArr[Math.min(idx, durArr.length - 1)];
-          parts.push(svc + "-" + duration);
-        }
-      }
-
-      // Sort by serviceOrder to ensure consistent key (order matters for matching)
-      parts.sort((a, b) => {
-        let ai = serviceOrder.indexOf(a.split("-")[0]);
-        let bi = serviceOrder.indexOf(b.split("-")[0]);
-        return ai - bi;
-      });
-
-      if (parts.length === 0) {
-        alert("Please select at least one service.");
-        return;
-      }
-
-      let key = parts.join("|");
-      if (vacant === "yes") key += "|VACANT";
-
-      // Matching logic
-      let found = null;
-      let keyNormalized = getServiceKeyOnly(key);
-      for (const line of activeServices) {
-        let lineKey = getServiceKeyOnly(line);
-        if (lineKey === keyNormalized) {
-          found = line;
-          break;
-        }
-      }
-
-      if (!found) {
-        alert("No matching service combination found. Please contact the office.\n\nDEBUG KEY: " + key);
-        return;
-      }
-
-      const match = found.match(/\[(\d+)\]/);
-      if (!match) {
-        alert("No service ID found for this selection.");
-        return;
-      }
-
-      const serviceId = match[1];
-      const ridUrl = `https://booking99.timetap.com/?rid=${serviceId}#/`;
-
-      // Hand off to the parent for a top-level logout → then RID (in one named tab).
-      if (window.parent && window.parent !== window) {
-        window.parent.postMessage({ type: "TT_BOOK", ridUrl }, "*");
-      } else {
-        // Fallback for standalone usage (not embedded)
-        window.location.href = ridUrl;
-      }
-    };
-  </script>
+</script>
 </body>
 </html>
+
+
+
+
+
+
+
