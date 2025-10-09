@@ -11,7 +11,7 @@
   <div class="container py-5">
     <div class="card shadow-sm">
       <div class="card-body">
-        <h3 class="card-title mb-4">Select Services1</h3>
+        <h3 class="card-title mb-4">Select Services</h3>
         <form id="bookingForm">
           <div class="form-group">
             <div class="form-check">
@@ -351,40 +351,7 @@ for (const line of activeServices) {
     return;
   }
   const serviceId = match[1];
-  const ridUrl = `https://booking99.timetap.com/?rid=${serviceId}#/`;
-
-  // open one top-level tab (needed so cookies clear + URL RID wins)
-  const win = window.open('about:blank', '_blank', 'noopener');
-  
-  // if popup blocked, fall back to breaking out of the iframe directly to RID
-  if (!win || win.closed) {
-    if (window.top !== window.self) window.top.location.href = ridUrl;
-    else window.location.href = ridUrl;
-    return;
-  }
-  
-  // candidate logout endpoints (most Spring apps use one of these)
-  const logoutCandidates = [
-    'https://booking99.timetap.com/businessWeb/j_spring_security_logout',
-    'https://booking99.timetap.com/businessWeb/logout',
-    'https://booking99.timetap.com/logout'
-  ];
-  
-  // try each logout URL for ~600ms, then navigate to RID
-  let i = 0;
-  function stepLogout() {
-    if (i < logoutCandidates.length) {
-      try { win.location.replace(logoutCandidates[i++]); } catch (_) {}
-      setTimeout(stepLogout, 600);
-    } else {
-      // final handoff to the actual service (top-level)
-      try { win.location.replace(ridUrl); } catch (_) {
-        // last-resort: if replace failed, assign
-        win.location.href = ridUrl;
-      }
-    }
-  }
-  stepLogout();
+  window.location.href = `https://booking99.timetap.com/?rid=${serviceId}#/`;
 
 };
 
@@ -392,7 +359,6 @@ for (const line of activeServices) {
 </script>
 </body>
 </html>
-
 
 
 
