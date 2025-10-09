@@ -11,7 +11,7 @@
   <div class="container py-5">
     <div class="card shadow-sm">
       <div class="card-body">
-        <h3 class="card-title mb-4">Select Services1</h3>
+        <h3 class="card-title mb-4">Select Services.</h3>
         <form id="bookingForm">
           <div class="form-group">
             <div class="form-check">
@@ -351,13 +351,7 @@ for (const line of activeServices) {
     return;
   }
   const serviceId = match[1];
-  const url = `https://booking99.timetap.com/?rid=${encodeURIComponent(serviceId)}#/`;
-  // or your proxied domain if/when you have it:
-  // const url = `https://booking.exitbooking.ca/?rid=${encodeURIComponent(serviceId)}#/`;
-
-  const win = window.open(url, '_blank', 'noopener,noreferrer'); 
-  // If a popup blocker stops it, fall back to same-tab nav:
-
+  window.location.href = `https://booking99.timetap.com/?rid=${serviceId}#/`;
 
 };
 
@@ -365,10 +359,6 @@ for (const line of activeServices) {
 </script>
 </body>
 </html>
-
-
-
-
 
 
 
