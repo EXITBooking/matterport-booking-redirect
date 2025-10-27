@@ -11,30 +11,38 @@
   <div class="container py-5">
     <div class="card shadow-sm">
       <div class="card-body">
-        <h3 class="card-title mb-4">Select Services1</h3>
+        <h3 class="card-title mb-4">Select Services</h3>
         <form id="bookingForm">
           <div class="form-group">
+
+<!--Checkbox to select Matterport Service-->
             <div class="form-check">
               <input type="checkbox" class="form-check-input" id="matterport">
               <label class="form-check-label" for="matterport">Matterport</label>
             </div>
+<!--Checkbox to select Floorplan Service-->
             <div class="form-check">
               <input type="checkbox" class="form-check-input" id="floorplan">
               <label class="form-check-label" for="floorplan">Floor Plan</label>
             </div>
+<!--Checkbox to select Photo Service-->
             <div class="form-check">
               <input type="checkbox" class="form-check-input" id="photos">
               <label class="form-check-label" for="photos">Photos</label>
             </div>
+<!--Checkbox to select Drone Service-->
             <div class="form-check">
               <input type="checkbox" class="form-check-input" id="drone">
               <label class="form-check-label" for="drone">Drone</label>
             </div>
+<!--Checkbox to select Social Media Video Service-->
             <div class="form-check">
               <input type="checkbox" class="form-check-input" id="social">
               <label class="form-check-label" for="social">Social Media Video</label>
             </div>
           </div>
+
+<!--Drop down to confirm Square Footage-->
 
           <div class="form-group">
             <label for="sqft">Square Footage</label>
@@ -47,6 +55,8 @@
             </select>
           </div>
 
+<!--Drop down to confirm Vacancy-->
+
           <div class="form-group">
             <label for="vacant">Is the property Vacant?</label>
             <select id="vacant" class="form-control" required>
@@ -56,13 +66,19 @@
             </select>
           </div>
 
-          // Test
+<!-- Checkbox to confirm Health and Safety -->
           <div>
             <div class="form-check">
               <input type="checkbox" class="form-check-input" id="HealthNSafety">
-              <label class="form-check-label" for="HealthNSafety">I confirm that the property does not contain health or safety hazards
-      (e.g., mold, exposed asbestos, unstable/broken flooring, unstable stairs, unsafe outbuildings).
-      I acknowledge the technician may refuse or cancel if the property is deemed unsafe.</label>
+              <label class="form-check-label" for="HealthNSafety">
+                I confirm that the property does not contain health or safety hazards.
+                <small class="text-muted d-block">
+                  Examples: mold, exposed asbestos, unstable/broken flooring, unsafe outbuildings.
+                </small>
+                <span class="d-block mt-2">
+                  I acknowledge the technician may refuse or cancel if the property is deemed unsafe.
+                </span>
+              </label>
             </div>
           </div>
 
@@ -70,6 +86,8 @@
           <div class="alert alert-warning d-none" id="socialNote">
             To book a Social Media Video, please call Cory or Huy directly.
           </div>
+
+<!--Button to Continue To The Booking Site-->
 
           <button type="submit" id="nextBtn" class="btn btn-primary">Continue to Booking</button>
         </form>
