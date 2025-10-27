@@ -11,7 +11,7 @@
   <div class="container py-5">
     <div class="card shadow-sm">
       <div class="card-body">
-        <h3 class="card-title mb-4">Select Services</h3>
+        <h3 class="card-title mb-4">Select Services1</h3>
         <form id="bookingForm">
           <div class="form-group">
             <div class="form-check">
@@ -55,6 +55,17 @@
               <option value="no">No</option>
             </select>
           </div>
+
+          // Test
+          <div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="HealthNSafety">
+              <label class="form-check-label" for="HealthNSafety">I confirm that the property does not contain health or safety hazards
+      (e.g., mold, exposed asbestos, unstable/broken flooring, unstable stairs, unsafe outbuildings).
+      I acknowledge the technician may refuse or cancel if the property is deemed unsafe.</label>
+            </div>
+          </div>
+
 
           <div class="alert alert-warning d-none" id="socialNote">
             To book a Social Media Video, please call Cory or Huy directly.
@@ -297,6 +308,11 @@ document.getElementById("bookingForm").onsubmit = function(e) {
     alert("Please indicate if the property is vacant.");
     return;
   }
+  if (!document.getElementById('HealthNSafety').checked) {
+  alert('Please confirm the Health & Safety conditions before continuing.');
+  return;
+  }
+
   const idx = sqftToIdx(sqft);
   let parts = [];
   for (const id in idToServiceName) {
@@ -359,7 +375,6 @@ for (const line of activeServices) {
 </script>
 </body>
 </html>
-
 
 
 
